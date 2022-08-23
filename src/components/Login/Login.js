@@ -1,24 +1,31 @@
 import React from 'react';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { useForm } from "react-hook-form";
 import { Link } from 'react-router-dom';
 import auth from '../../firebase.init';
-
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
+    const navigate = useNavigate();
     const [
         signInWithEmailAndPassword,
         user,
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
+    const [signInWithGoogle, googleUser, googleLoading, googleError] = useSignInWithGoogle(auth);
 
+    if (loading || googleLoading) {
+        return <div>Loading...</div>;
+    }
     let erroMsg;
-    if (error) {
+    if (error || googleError) {
         erroMsg = <p className='text-red-500'>Error: {error?.message}</p>
     }
-
+    if (user || googleUser) {
+        navigate('/');
+    }
     const onSubmit = data => {
         signInWithEmailAndPassword(data.email, data.password);
     }
@@ -40,7 +47,7 @@ const Login = () => {
                                         message: "Email is Required"
                                     },
                                     pattern: {
-                                        value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                                         message: 'Provide valid Email'
                                     }
                                 })}
@@ -74,12 +81,12 @@ const Login = () => {
                         <input className='btn w-full max-w-xs' type="submit" value="Login" />
                     </form>
                     {erroMsg}
-                    <small> <p className='text-center mt-2'>New User? <Link to='/signup' className='text-primary'>Create New Account</Link> </p></small>
+                    <p className='text-center text-sm mt-2'>New User? <Link to='/signup' className='text-primary'>Create New Account</Link> </p>
 
-                    <small><p className='text-center mt-2'>Forget Password? <button className='btn-xs btn-link text-primary ' >Reset Your Password</button></p></small>
+                    <p className='text-center mt-2'>Forget Password? <button className='btn-xs btn-link text-primary ' >Reset Your Password</button></p>
 
                     <div className="divider">OR</div>
-                    <button className="btn btn-outline">Continue With Google</button>
+                    <button onClick={() => signInWithGoogle()} className="btn btn-outline">Continue With Google</button>
                 </div>
             </div>
         </div>
