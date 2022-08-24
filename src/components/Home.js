@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db } from '../firebase.init';
 import { uid } from 'uid';
-import { onValue, ref, set } from 'firebase/database';
+import { onValue, ref, remove, set } from 'firebase/database';
 const Home = () => {
     const [task, setTask] = useState('');
     const [tasks, setTasks] = useState([]);
@@ -31,6 +31,11 @@ const Home = () => {
         })
     }, []);
 
+    // delete
+    const handleDelete = (task) => {
+        remove(ref(db, `/${task.uuid}`));
+    }
+
 
     return (
         <div>
@@ -58,7 +63,7 @@ const Home = () => {
                                         <>
                                             <h1>{task.task}</h1>
                                             <button className='btn btn-primary'>Update</button>
-                                            <button className='btn btn-primary'>Delete</button>
+                                            <button onClick={() => handleDelete(task)} className='btn btn-primary'>Delete</button>
                                         </>
                                     ))}
                                 </tr>
