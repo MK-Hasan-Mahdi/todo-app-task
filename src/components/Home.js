@@ -74,14 +74,14 @@ const Home = () => {
                     <input type="text" name='task' value={task} onChange={handleChange} placeholder="Write task" className="input w-full text-2xl focus:outline-0 input-bordered" />
                     {isEdit ? (
                         <>
-                            <button onClick={handleUpdateSubmit}>Submit Change</button>
-                            <button
+                            <button onClick={handleUpdateSubmit} className="btn btn-primary w-96 mx-auto my-2">Update</button>
+                            <button className='btn btn-success w-96 mx-auto my-2'
                                 onClick={() => {
                                     setIsEdit(false);
                                     setTask("");
                                 }}
                             >
-                                X
+                                Cancel Update
                             </button>
                         </>
                     ) : (
