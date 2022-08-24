@@ -12,8 +12,6 @@ const Header = () => {
     const menuItems = <>
 
         <li><Link className='shadow md:mr-3' to='/'>Home</Link></li>
-        <li><Link className='shadow md:mr-3' to='/completedtasks'>Completed Tasks</Link></li>
-        <li><Link className='shadow md:mr-3' to='/todo'>To-Do</Link></li>
         <li className=''>
             {
                 user ? <button className='btn-ghost' onClick={logout}>Sign Out</button>

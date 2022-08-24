@@ -8,9 +8,7 @@ const Home = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [tempUuid, setTempUuid] = useState('');
 
-    const handleTaskChange = (e) => {
-        setTask(e.target.value);
-    }
+
     const createTodo = (e) => {
         e.preventDefault();
         const uuid = uid();
@@ -21,6 +19,12 @@ const Home = () => {
     };
     const handleChange = (e) => {
         setTask(e.target.value);
+        if (task === true) {
+            setTask();
+        }
+        else {
+            setTask(e.target.value);
+        }
 
     }
     // read
@@ -56,12 +60,17 @@ const Home = () => {
         setIsEdit(false);
     }
 
+    const handleCompleteTask = (uuid) => {
+        update(ref(db, `/${uuid}`), {
+            completed: true,
+        });
+    }
+
     return (
         <div>
             <div className='flex items-center mt-12 flex-col'>
                 <h3 className='text-3xl font-extrabold mb-2 font-mono'>Add Task</h3>
                 <div className="form-control w-full md:w-1/2">
-                    <input type="text" value={task} onChange={handleTaskChange} />
                     <input type="text" name='task' value={task} onChange={handleChange} placeholder="Write task" className="input w-full text-2xl focus:outline-0 input-bordered" />
                     {isEdit ? (
                         <>
@@ -76,7 +85,7 @@ const Home = () => {
                             </button>
                         </>
                     ) : (
-                        <button onClick={createTodo}>submit</button>
+                        <button onClick={createTodo} className="btn btn-primary w-96 mx-auto my-2">Submit</button>
                     )}
                 </div>
             </div>
@@ -88,14 +97,14 @@ const Home = () => {
                         <table className="table w-full">
                             <thead>
                                 <tr>
-                                    <th>Task List</th>
-                                    {tasks.map(task => (
-                                        <>
-                                            <h1>{task.task}</h1>
-                                            <button onClick={() => handleUpdate(task)} className='btn btn-primary'>Update</button>
-                                            <button onClick={() => handleDelete(task)} className='btn btn-primary'>Delete</button>
-                                        </>
-                                    ))}
+
+                                    {tasks.map(task => {
+                                        return <tr className='flex items-center py-2 shadow-md my-2 gap-2'>
+                                            <input type="checkbox" onClick={() => handleCompleteTask(task.uuid)} className='checkbox' />{task.task}
+                                            <button onClick={() => handleUpdate(task)} className='btn btn-sm btn-primary'>Edit</button>
+                                            <button onClick={() => handleDelete(task)} className='btn btn-sm btn-danger'>Delete</button>
+                                        </tr>
+                                    })}
                                 </tr>
                             </thead>
                             <tbody>
